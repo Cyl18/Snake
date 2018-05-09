@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Snake.Objects;
+﻿using Snake.Objects;
 
 namespace Snake
 {

@@ -1,23 +1,31 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 using Snake.Objects;
 
 namespace Snake
 {
     public class Grid : IEnumerable<GridObject>
     {
-        public GridObject[,] Objects { get; }
-        public int Width { get; }
-        public int Height { get; }
-
         public Grid(Size size)
         {
             Width = size.Width;
             Height = size.Height;
             Objects = new GridObject[size.Width, size.Height];
+        }
+
+        public GridObject[,] Objects { get; }
+        public int Width { get; }
+        public int Height { get; }
+
+        public IEnumerator<GridObject> GetEnumerator()
+        {
+            return Objects.AsEnumerable().GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         public GridObject Get(Point point)
@@ -39,16 +47,6 @@ namespace Snake
         {
             Objects[point.X, point.Y] = obj;
             if (obj != null) obj.Point = point;
-        }
-
-        public IEnumerator<GridObject> GetEnumerator()
-        {
-            return Objects.AsEnumerable().GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
     }
 }

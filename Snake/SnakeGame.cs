@@ -1,20 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Snake.Objects;
 
 namespace Snake
 {
     public class SnakeGame
     {
-        public Grid Grid { get; }
-        public Direction? PendingTurn { get; internal set; }
-        public bool PendingExpand { get; private set; }
-        public Snake Snake { get; }
         private readonly Random _random = new Random();
 
         public SnakeGame()
@@ -26,6 +18,13 @@ namespace Snake
             Grid.Set(GetRandomPoint(), head);
             Snake = new Snake(head);
         }
+
+        public Grid Grid { get; }
+        public Direction? PendingTurn { get; internal set; }
+        public bool PendingExpand { get; private set; }
+        public Snake Snake { get; }
+
+        public ConsoleDrawer Drawer { get; set; }
 
         private Point GetRandomPoint()
         {
@@ -48,11 +47,9 @@ namespace Snake
                 TickDraw();
                 return true;
             }
-            else
-            {
-                GameOver();
-                return false;
-            }
+
+            GameOver();
+            return false;
         }
 
         private void TickDraw()
@@ -135,7 +132,5 @@ namespace Snake
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($"Score: {Snake.Count()}");
         }
-
-        public ConsoleDrawer Drawer { get; set; }
     }
 }

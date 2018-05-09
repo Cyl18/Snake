@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Snake
 {
@@ -8,10 +6,7 @@ namespace Snake
     {
         public static IEnumerable<T> AsEnumerable<T>(this T[,] array)
         {
-            foreach (var item in array)
-            {
-                yield return item;
-            }
+            foreach (var item in array) yield return item;
         }
     }
 }

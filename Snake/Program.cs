@@ -13,10 +13,8 @@ namespace Snake
             Task.Factory.StartNew(() =>
             {
                 while (true)
-                {
                     if (_currentGame != null)
                         _currentGame.PendingTurn = Console.ReadKey().Key.ToDirection();
-                }
             });
             while (true)
             {

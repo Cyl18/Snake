@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 using Snake.Objects;
 
 namespace Snake
@@ -17,12 +15,12 @@ namespace Snake
             Console.CursorVisible = false;
         }
 
+        public Grid Grid { get; }
+
         private static int GetHeight(Grid grid)
         {
             return (int)Math.Ceiling(grid.Width / 2.0);
         }
-
-        public Grid Grid { get; }
 
         public void Draw()
         {
@@ -31,9 +29,8 @@ namespace Snake
             var lastf = ConsoleColor.Gray;
             var lastb = ConsoleColor.Gray;
 
-            for (int y = 0; y < GetHeight(Grid); y++)
-            {
-                for (int x = 0; x < Grid.Width; x++)
+            for (var y = 0; y < GetHeight(Grid); y++)
+                for (var x = 0; x < Grid.Width; x++)
                 {
                     var yup = y * 2;
                     var ydown = y * 2 + 1;
@@ -55,8 +52,7 @@ namespace Snake
 
                     Console.Write('▀');
                 }
-                //if (y != GetHeight(Grid) - 1) Console.WriteLine();
-            }
+            //if (y != GetHeight(Grid) - 1) Console.WriteLine();
         }
 
         private ConsoleColor GetColor(GridObject up)
