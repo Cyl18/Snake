@@ -7,22 +7,13 @@ namespace Snake
 {
     public class Snake : IEnumerable<SnakeComponent>
     {
-        public Snake(SnakeHead head)
-        {
-            Head = head;
-        }
+        public Snake(SnakeHead head) => Head = head;
 
         public SnakeHead Head { get; }
 
-        public IEnumerator<SnakeComponent> GetEnumerator()
-        {
-            return AsEnumerable().GetEnumerator();
-        }
+        public IEnumerator<SnakeComponent> GetEnumerator() => AsEnumerable().GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         private IEnumerable<SnakeComponent> AsEnumerable()
         {
@@ -32,9 +23,6 @@ namespace Snake
             while ((cobj = cobj.NextComponent) != null) yield return cobj;
         }
 
-        public Point GetNextPoint()
-        {
-            return Head.Point.Add(Head.Direction.GetTransformPoint());
-        }
+        public Point GetNextPoint() => Head.Point.Add(Head.Direction.GetTransformPoint());
     }
 }

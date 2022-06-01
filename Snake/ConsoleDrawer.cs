@@ -9,19 +9,11 @@ namespace Snake
         public ConsoleDrawer(Grid grid)
         {
             Grid = grid;
-            Console.Clear();
-            Console.SetWindowSize(grid.Width, GetHeight(grid) + 1);
-            Console.SetBufferSize(grid.Width, GetHeight(grid) + 1);
             Console.CursorVisible = false;
         }
 
         public Grid Grid { get; }
-
-        private static int GetHeight(Grid grid)
-        {
-            return (int)Math.Ceiling(grid.Width / 2.0);
-        }
-
+        
         public void Draw()
         {
             Console.Clear();
@@ -29,7 +21,8 @@ namespace Snake
             var lastf = ConsoleColor.Gray;
             var lastb = ConsoleColor.Gray;
 
-            for (var y = 0; y < GetHeight(Grid); y++)
+            for (var y = 0; y < (int)Math.Ceiling(Grid.Width / 2.0); y++)
+            {
                 for (var x = 0; x < Grid.Width; x++)
                 {
                     var yup = y * 2;
@@ -52,7 +45,9 @@ namespace Snake
 
                     Console.Write('▀');
                 }
-            //if (y != GetHeight(Grid) - 1) Console.WriteLine();
+
+                Console.WriteLine();
+            }
         }
 
         private ConsoleColor GetColor(GridObject up)

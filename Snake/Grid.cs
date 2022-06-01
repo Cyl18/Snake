@@ -18,35 +18,22 @@ namespace Snake
         public int Width { get; }
         public int Height { get; }
 
-        public IEnumerator<GridObject> GetEnumerator()
-        {
-            return Objects.AsEnumerable().GetEnumerator();
-        }
+        public IEnumerator<GridObject> GetEnumerator() => Objects.AsEnumerable().GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        public GridObject Get(Point point) => IsOutOfGrid(point) ? null : Objects[point.X, point.Y];
 
-        public GridObject Get(Point point)
-        {
-            return IsOutOfGrid(point) ? null : Objects[point.X, point.Y];
-        }
-
-        public bool IsOutOfGrid(Point point)
-        {
-            return point.X >= Width || point.Y >= Height || point.X < 0 || point.Y < 0;
-        }
-
-        public GridObject GetWithoutChecking(Point point)
-        {
-            return Objects[point.X, point.Y];
-        }
+        public GridObject GetWithoutChecking(Point point) => Objects[point.X, point.Y];
 
         public void Set(Point point, GridObject obj)
         {
             Objects[point.X, point.Y] = obj;
             if (obj != null) obj.Point = point;
         }
+
+
+        // 是否越界
+
+        public bool IsOutOfGrid(Point point) => point.X >= Width || point.Y >= Height || point.X < 0 || point.Y < 0;
     }
 }

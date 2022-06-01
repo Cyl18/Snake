@@ -8,20 +8,27 @@ namespace Snake
     {
         private static volatile SnakeGame _currentGame;
 
-        private static void Main(string[] args)
+        public static void Main(string[] args)
         {
+            // 开一个线程来读取键盘输入
             Task.Factory.StartNew(() =>
             {
                 while (true)
+                {
+                    var dir = Console.ReadKey().Key.ToDirection();
                     if (_currentGame != null)
-                        _currentGame.PendingTurn = Console.ReadKey().Key.ToDirection();
-            });
+                        _currentGame.PendingTurn = dir;
+                }
+            }, TaskCreationOptions.LongRunning);
+
             while (true)
             {
                 _currentGame = new SnakeGame();
                 while (_currentGame.Tick()) Thread.Sleep(300);
+                // 一局游戏之后显示2s结果
                 Thread.Sleep(2000);
             }
         }
+
     }
 }

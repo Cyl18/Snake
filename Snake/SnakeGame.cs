@@ -14,9 +14,15 @@ namespace Snake
             Grid = new Grid(new Size(20, 20));
             Drawer = new ConsoleDrawer(Grid);
 
+            var body2 = new SnakeBody();
+            var body1 = new SnakeBody();
+            body1.NextComponent = body2;
             var head = new SnakeHead();
-            Grid.Set(GetRandomPoint(), head);
+            head.NextComponent = body1;
+            
+            Grid.Set(GetRandomPointForHead(), head);
             Snake = new Snake(head);
+            TickMove();
         }
 
         public Grid Grid { get; }
@@ -25,6 +31,17 @@ namespace Snake
         public Snake Snake { get; }
 
         public ConsoleDrawer Drawer { get; set; }
+
+        private Point GetRandomPointForHead()
+        {
+            while (true)
+            {
+                var x = _random.Next(3, Grid.Width - 3);
+                var y = _random.Next(3, Grid.Height - 3);
+                var ptr = new Point(x, y);
+                if (Grid.Get(ptr) == null) return ptr;
+            }
+        }
 
         private Point GetRandomPoint()
         {
@@ -40,7 +57,6 @@ namespace Snake
         public bool Tick()
         {
             TickPendingTurn();
-            TickExpand();
             if (TickMove())
             {
                 TickFood();
@@ -65,23 +81,37 @@ namespace Snake
                 Grid.Set(point, new Food());
             }
         }
-
-        private void TickExpand()
+        
+        private bool TickMove()
         {
+            // 获取蛇头指向的下一个点
+            var nextPoint = Snake.GetNextPoint();
+            var obj = Grid.Get(nextPoint);
+
+            // 如果出界或者撞到身体则判断游戏结束
+            if (Grid.IsOutOfGrid(nextPoint) || obj is SnakeComponent) return false;
+            // 如果遇到食物则判定要伸展
+            if (obj is Food) PendingExpand = true;
+
+            var currentPoint = Snake.Head.Point;
+
+            // 设置蛇头指向的点为蛇头
+            Grid.Set(nextPoint, Snake.Head);
+
+            // 将当前蛇头的点设置为一段新的身体
+            var previousObj = Snake.Head.NextComponent;
+            var newBody = new SnakeBody { NextComponent = previousObj };
+            Grid.Set(currentPoint, newBody);
+            Snake.Head.NextComponent = newBody;
+
+            // 如果要伸展，则什么都不做
             if (PendingExpand)
             {
                 PendingExpand = false;
-                if (Snake.Head.NextComponent == null)
-                {
-                    var tp = Snake.Head.Direction.GetTransformPoint();
-                    var point = Snake.Head.Point.Add(new Point(-tp.X, -tp.Y));
-                    var body = new SnakeBody();
-                    Snake.Head.NextComponent = body;
-                    Grid.Set(point, body);
-                }
             }
             else
             {
+                // 否则把最后一个物件清除
                 var components = Snake.ToArray();
                 var i = components.Length - 2;
                 if (i >= 0)
@@ -90,29 +120,7 @@ namespace Snake
                     Grid.Set(components[i + 1].Point, null);
                 }
             }
-        }
 
-        private bool TickMove()
-        {
-            var nextPoint = Snake.GetNextPoint();
-            var obj = Grid.Get(nextPoint);
-            if (Grid.IsOutOfGrid(nextPoint) || obj is SnakeComponent) return false;
-            if (obj is Food) PendingExpand = true;
-
-            var currentPoint = Snake.Head.Point;
-            var previousObj = Snake.Head.NextComponent;
-
-            Grid.Set(nextPoint, Snake.Head);
-            if (Snake.Head.NextComponent == null)
-            {
-                Grid.Set(currentPoint, null);
-                return true;
-            }
-
-            var newBody = new SnakeBody { NextComponent = previousObj };
-            Grid.Set(currentPoint, newBody);
-
-            Snake.Head.NextComponent = newBody;
             return true;
         }
 
@@ -132,5 +140,6 @@ namespace Snake
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($"Score: {Snake.Count()}");
         }
+
     }
 }
